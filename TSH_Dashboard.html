@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSH · Executive View 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --ink: #0E0F0F;
+  --paper: #F5F1EB;
+  --paper-mid: #EDE8E0;
+  --paper-dark: #E0D9CF;
+  --rule: rgba(14,15,15,0.1);
+  --rule-strong: rgba(14,15,15,0.2);
+  --accent: #C4412A;
+  --accent-warm: #D4602A;
+  --teal: #1A6B6B;
+  --gold: #9A7B2F;
+  --green: #2A6B4A;
+  --muted: rgba(14,15,15,0.45);
+  --chapter-w: 320px;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Grain texture overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.5;
+}
+
+/* ─── MASTHEAD ─────────────────────────────────── */
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 40px 18px;
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.masthead-left {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.masthead-org {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.masthead-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--rule-strong);
+  align-self: center;
+}
+
+.masthead-sub {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.masthead-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.masthead-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.rag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 2px;
+}
+.rag-good { background: rgba(42,107,74,0.12); color: var(--green); border: 1px solid rgba(42,107,74,0.3); }
+.rag-warn { background: rgba(154,123,47,0.12); color: var(--gold); border: 1px solid rgba(154,123,47,0.3); }
+.rag-flag { background: rgba(196,65,42,0.1); color: var(--accent); border: 1px solid rgba(196,65,42,0.25); }
+.rag-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ─── STORY SCROLL ─────────────────────────────── */
+/* Horizontal scroll of chapters */
+.story-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  height: calc(100vh - 64px);
+}
+.story-scroll::-webkit-scrollbar { display: none; }
+
+/* ─── CHAPTER ──────────────────────────────────── */
+.chapter {
+  flex: 0 0 var(--chapter-w);
+  scroll-snap-align: start;
+  border-right: 1px solid var(--rule-strong);
+  display: flex;
+  flex-direction: column;
+  padding: 36px 32px 32px;
+  position: relative;
+  overflow-y: auto;
+  animation: fadeIn 0.6s ease both;
+}
+
+.chapter:nth-child(1) { animation-delay: 0.05s; }
+.chapter:nth-child(2) { animation-delay: 0.15s; }
+.chapter:nth-child(3) { animation-delay: 0.25s; }
+.chapter:nth-child(4) { animation-delay: 0.35s; }
+.chapter:nth-child(5) { animation-delay: 0.45s; flex: 0 0 480px; }
+.chapter:nth-child(6) { animation-delay: 0.55s; flex: 0 0 520px; }
+
+@keyframes fadeIn {
+  from { opacity:0; transform: translateX(20px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+
+/* Wide chapters */
+.chapter-wide { flex: 0 0 480px !important; }
+.chapter-xwide { flex: 0 0 560px !important; }
+
+/* Chapter number */
+.chapter-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.chapter-num::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* Chapter topic line */
+.chapter-topic {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/* The BIG number */
+.big-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 88px;
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.big-number .unit {
+  font-size: 36px;
+  font-weight: 300;
+  vertical-align: super;
+  letter-spacing: 0;
+}
+
+.big-number .suffix {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0;
+}
+
+/* The one-liner */
+.verdict {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+.context {
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--muted);
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+/* Divider rule */
+.rule {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 18px 0;
+}
+
+/* Sub-stat */
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.stat-row:last-child { border-bottom: none; }
+
+.stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.stat-val.good { color: var(--green); }
+.stat-val.warn { color: var(--gold); }
+.stat-val.flag { color: var(--accent); }
+
+/* Accent bar at top of chapter */
+.chapter-accent-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+/* ─── INLINE MINI CHART ────────────────────────── */
+.mini-chart-wrap {
+  margin-top: 16px;
+}
+
+.mini-chart-label {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* Spark bar chart */
+.spark-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 48px;
+}
+
+.spark-bar-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.spark-bar {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  transition: opacity 0.2s;
+}
+
+.spark-bar:hover { opacity: 0.75; }
+
+.spark-bar-lbl {
+  font-size: 8px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ─── PROGRESS RING ────────────────────────────── */
+.ring-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin: 14px 0;
+}
+
+.ring-wrap { position: relative; flex-shrink: 0; }
+.ring-label-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.ring-pct {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+.ring-caption { font-size: 8px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ─── PIPELINE FLOW ────────────────────────────── */
+.pipeline-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 16px;
+}
+
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.flow-step:last-child { border-bottom: none; }
+
+.flow-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  min-width: 56px;
+  line-height: 1;
+}
+
+.flow-right { flex: 1; }
+.flow-name { font-size: 11px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.flow-bar { height: 3px; background: var(--paper-dark); border-radius: 2px; }
+.flow-fill { height: 100%; border-radius: 2px; }
+
+/* ─── CAF DECOMP TREE ──────────────────────────── */
+.decomp-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.decomp-tree {
+  margin-top: 16px;
+  position: relative;
+}
+
+.decomp-root {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 16px;
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.decomp-root-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 700;
+  display: block;
+  line-height: 1;
+  margin-bottom: 2px;
+  color: var(--paper);
+}
+
+.decomp-root-label {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(245,241,235,0.6);
+}
+
+.decomp-level {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-left: 16px;
+  position: relative;
+}
+
+.decomp-level::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 14px;
+  width: 1px;
+  background: var(--rule-strong);
+}
+
+.decomp-node {
+  flex: 1;
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+  padding: 10px 12px;
+  background: var(--paper-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.decomp-node:hover {
+  border-color: var(--ink);
+  background: var(--paper-dark);
+}
+
+.decomp-node::before {
+  content: '';
+  position: absolute;
+  left: -16px; top: 50%;
+  width: 16px;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+.decomp-node-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.decomp-node-label {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.decomp-node-sub {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.decomp-node.flagged {
+  border-color: rgba(196,65,42,0.4);
+  background: rgba(196,65,42,0.05);
+}
+
+.decomp-node.flagged .decomp-node-val { color: var(--accent); }
+
+.decomp-expand-hint {
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.decomp-expand-hint::before { content: '↳'; font-size: 11px; }
+
+/* Sub-nodes (hidden by default, shown on click) */
+.decomp-sub-level {
+  padding-left: 16px;
+  position: relative;
+  display: none;
+}
+.decomp-sub-level.open { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.decomp-sub-level::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--rule);
+}
+
+.decomp-sub-node {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 8px 10px;
+  background: var(--paper);
+  min-width: 90px;
+  position: relative;
+}
+.decomp-sub-node::before {
+  content: '';
+  position: absolute;
+  left: -16px; top: 50%;
+  width: 16px;
+  height: 1px;
+  background: var(--rule);
+}
+.decomp-sub-node-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+}
+.decomp-sub-node-label { font-size: 9px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+/* Horizontal scroll hint */
+.scroll-hint {
+  position: fixed;
+  right: 32px;
+  bottom: 28px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 50;
+  animation: pulse 2.5s ease infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.scroll-hint-arrow {
+  font-size: 16px;
+  animation: nudge 1.5s ease infinite;
+}
+@keyframes nudge {
+  0%,100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+/* Chapter background tints */
+.ch-finance { background: var(--paper); }
+.ch-caf     { background: #F0EBE3; }
+.ch-partners{ background: #EBF0EC; }
+.ch-comms   { background: #EBECf0; }
+.ch-chart   { background: var(--paper); }
+.ch-decomp  { background: #F5F0E8; }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-left">
+    <span class="masthead-org">Toronto Seniors Housing</span>
+    <div class="masthead-divider"></div>
+    <span class="masthead-sub">Executive Summary · FY 2026</span>
+  </div>
+  <div class="masthead-right">
+    <span class="masthead-date">As of Feb 21, 2026 · Q1</span>
+    <span class="rag-pill rag-good"><span class="rag-dot"></span>On Track</span>
+    <span class="rag-pill rag-warn"><span class="rag-dot"></span>1 Region Monitor</span>
+    <span class="rag-pill rag-flag"><span class="rag-dot"></span>2 Flags</span>
+  </div>
+</header>
+
+<!-- STORY SCROLL -->
+<div class="story-scroll" id="scroll">
+
+  <!-- ══ CHAPTER 1 · FINANCES ══ -->
+  <div class="chapter ch-finance">
+    <div class="chapter-accent-bar" style="background: linear-gradient(90deg, #C4412A, #D4602A);"></div>
+    <div class="chapter-num">01 · Finances</div>
+
+    <div class="chapter-topic">How are we spending?</div>
+    <div class="big-number"><span class="unit">$</span>2.1<span class="suffix">M</span></div>
+    <div class="verdict">We've spent half our annual budget — on pace for the year.</div>
+    <div class="context">Of the $4.2M CAF budget allocated by the City, $2.1M in receipts have been loaded YTD. Spend is evenly distributed across most regions with one exception.</div>
+
+    <hr class="rule">
+    <div class="stat-row"><span class="stat-label">Total CAF Budget (2026)</span><span class="stat-val">$4.2M</span></div>
+    <div class="stat-row"><span class="stat-label">Actuals YTD</span><span class="stat-val">$2.1M</span></div>
+    <div class="stat-row"><span class="stat-label">Budget Utilized</span><span class="stat-val good">51%</span></div>
+    <div class="stat-row"><span class="stat-label">Etobicoke Region</span><span class="stat-val warn">40% — Monitor</span></div>
+    <div class="stat-row"><span class="stat-label">Buildings on Track (>50%)</span><span class="stat-val good">18 / 22</span></div>
+    <div class="stat-row"><span class="stat-label">Buildings Flagged (&lt;35%)</span><span class="stat-val flag">2</span></div>
+
+    <!-- Spark bar chart — utilization by region -->
+    <div class="mini-chart-wrap">
+      <div class="mini-chart-label">Utilization by Region</div>
+      <div class="spark-bars">
+        <div class="spark-bar-group">
+          <div class="spark-bar" style="height:63%; background:var(--green); opacity:0.7;"></div>
+          <span class="spark-bar-lbl">N.York</span>
+        </div>
+        <div class="spark-bar-group">
+          <div class="spark-bar" style="height:60%; background:var(--green); opacity:0.7;"></div>
+          <span class="spark-bar-lbl">Scarbr.</span>
+        </div>
+        <div class="spark-bar-group">
+          <div class="spark-bar" style="height:40%; background:var(--accent); opacity:0.8;"></div>
+          <span class="spark-bar-lbl">Etob.</span>
+        </div>
+        <div class="spark-bar-group">
+          <div class="spark-bar" style="height:59%; background:var(--green); opacity:0.7;"></div>
+          <span class="spark-bar-lbl">D/town</span>
+        </div>
+        <div class="spark-bar-group">
+          <div class="spark-bar" style="height:55%; background:var(--green); opacity:0.7;"></div>
+          <span class="spark-bar-lbl">E.York</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CHAPTER 2 · CAF PIPELINE ══ -->
+  <div class="chapter ch-caf" id="caf-chapter" style="flex: 0 0 380px; cursor:pointer; position:relative;" onclick="openCAF()">
+    <div class="chapter-accent-bar" style="background: linear-gradient(90deg, #9A7B2F, #C9A84C);"></div>
+    <div class="chapter-num">02 · CAF Requests <span style="margin-left:auto; font-size:9px; letter-spacing:0.12em; background:var(--gold); color:white; padding:2px 8px; border-radius:10px; font-weight:600; text-transform:uppercase;">Tap to drill →</span></div>
+
+    <div class="chapter-topic">From tenant ask to fulfilled order</div>
+
+    <!-- THE 3-STEP FLOW — big and visual -->
+    <div style="display:flex; flex-direction:column; gap:0; margin-bottom:20px;">
+
+      <!-- STEP 1 — Tenant Submits -->
+      <div style="background:var(--paper-dark); border-radius:6px 6px 0 0; padding:18px 20px 16px; position:relative;">
+        <div style="font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; font-weight:600;">① Tenant Submits</div>
+        <div style="display:flex; align-items:baseline; gap:10px;">
+          <span style="font-family:'Cormorant Garamond',serif; font-size:64px; font-weight:300; line-height:0.9; letter-spacing:-0.03em;">847</span>
+          <span style="font-size:12px; color:var(--muted); line-height:1.4;">requests<br>received</span>
+        </div>
+        <div style="font-size:11px; color:var(--muted); margin-top:8px;">Tenants across all buildings submit CAF requests — e.g. cake & coffee for Mother's Day</div>
+      </div>
+
+      <!-- Arrow connector -->
+      <div style="display:flex; align-items:center; justify-content:center; height:28px; background:linear-gradient(var(--paper-dark), var(--paper-mid)); position:relative;">
+        <div style="width:1px; height:100%; background:var(--rule-strong); position:absolute;"></div>
+        <div style="background:var(--gold); color:white; font-size:10px; padding:2px 10px; border-radius:10px; z-index:1; font-weight:600; letter-spacing:0.08em;">MANAGER APPROVES</div>
+      </div>
+
+      <!-- STEP 2 — Manager Approves -->
+      <div style="background:var(--paper-mid); padding:18px 20px 16px; position:relative;">
+        <div style="font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; font-weight:600;">② Manager Approves</div>
+        <div style="display:flex; align-items:baseline; gap:10px;">
+          <span style="font-family:'Cormorant Garamond',serif; font-size:64px; font-weight:300; line-height:0.9; letter-spacing:-0.03em; color:var(--green);">612</span>
+          <span style="font-size:12px; color:var(--muted); line-height:1.4;">approved<br><span style="font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--green);">72%</span> rate</span>
+        </div>
+        <!-- Mini approval bar -->
+        <div style="margin-top:10px;">
+          <div style="height:5px; background:var(--paper-dark); border-radius:3px; overflow:hidden;">
+            <div style="height:100%; width:72%; background:var(--green); border-radius:3px;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;">
+            <span style="font-size:10px; color:var(--green);">612 approved</span>
+            <span style="font-size:10px; color:var(--gold);">235 pending</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arrow connector -->
+      <div style="display:flex; align-items:center; justify-content:center; height:28px; background:linear-gradient(var(--paper-mid), var(--paper)); position:relative;">
+        <div style="width:1px; height:100%; background:var(--rule-strong); position:absolute;"></div>
+        <div style="background:var(--teal); color:white; font-size:10px; padding:2px 10px; border-radius:10px; z-index:1; font-weight:600; letter-spacing:0.08em;">CLERK ORDERS</div>
+      </div>
+
+      <!-- STEP 3 — Clerk Orders / Spend -->
+      <div style="background:var(--paper); border:1px solid var(--rule-strong); border-radius:0 0 6px 6px; padding:18px 20px 16px;">
+        <div style="font-size:9px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; font-weight:600;">③ Clerk Orders · Receipts Loaded</div>
+        <div style="display:flex; align-items:baseline; gap:10px;">
+          <span style="font-family:'Cormorant Garamond',serif; font-size:52px; font-weight:300; line-height:0.9; letter-spacing:-0.03em;"><span style="font-size:22px; vertical-align:super;">$</span>2.1<span style="font-size:20px; font-family:'Outfit',sans-serif; font-weight:300; color:var(--muted);">M</span></span>
+          <span style="font-size:12px; color:var(--muted); line-height:1.4;">spent YTD<br>of $4.2M budget</span>
+        </div>
+        <!-- Budget utilization bar -->
+        <div style="margin-top:10px;">
+          <div style="height:5px; background:var(--paper-dark); border-radius:3px; overflow:hidden;">
+            <div style="height:100%; width:51%; background:var(--teal); border-radius:3px;"></div>
+          </div>
+          <div style="display:flex; justify-content:space-between; margin-top:4px;">
+            <span style="font-size:10px; color:var(--teal);">$2.1M spent · 51%</span>
+            <span style="font-size:10px; color:var(--muted);">$2.1M remaining</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Flags -->
+    <div style="background:rgba(196,65,42,0.06); border:1px solid rgba(196,65,42,0.2); border-radius:4px; padding:10px 14px;">
+      <div style="font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px;">⚑ Watch Items</div>
+      <div style="font-size:11px; color:var(--muted); line-height:1.7;">
+        235 requests still pending manager approval<br>
+        Etobicoke spend at 40% — clerk follow-up needed<br>
+        Kipling Towers lowest approval rate at 57%
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ CHAPTER 3 · PARTNERSHIPS ══ -->
+  <div class="chapter ch-partners">
+    <div class="chapter-accent-bar" style="background: linear-gradient(90deg, #1A6B6B, #2A9A7A);"></div>
+    <div class="chapter-num">03 · Partnerships</div>
+
+    <div class="chapter-topic">How are our agencies doing?</div>
+    <div class="big-number">38</div>
+    <div class="verdict">Our agency network is active and growing — 4 new partners onboarded this year.</div>
+    <div class="context">38 agencies are actively delivering programs across TSH buildings. 3 agencies have lapsed and are under review. 9 partnerships are up for renewal in Q2 and require attention.</div>
+
+    <hr class="rule">
+    <div class="stat-row"><span class="stat-label">Active Agencies</span><span class="stat-val good">38</span></div>
+    <div class="stat-row"><span class="stat-label">New This Year</span><span class="stat-val good">+4</span></div>
+    <div class="stat-row"><span class="stat-label">Renewals Due Q2</span><span class="stat-val warn">9</span></div>
+    <div class="stat-row"><span class="stat-label">Inactive / Lapsed</span><span class="stat-val flag">3</span></div>
+    <div class="stat-row"><span class="stat-label">Programs Running</span><span class="stat-val">124</span></div>
+
+    <hr class="rule">
+    <div class="mini-chart-label" style="font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:8px;">Programs by Category</div>
+    <div class="stat-row"><span class="stat-label">Health & Wellness</span><span class="stat-val">37</span></div>
+    <div class="stat-row"><span class="stat-label">Social & Recreation</span><span class="stat-val">30</span></div>
+    <div class="stat-row"><span class="stat-label">Learning & Education</span><span class="stat-val">25</span></div>
+    <div class="stat-row"><span class="stat-label">Food & Nutrition</span><span class="stat-val">20</span></div>
+    <div class="stat-row"><span class="stat-label">Support Services</span><span class="stat-val">12</span></div>
+  </div>
+
+  <!-- ══ CHAPTER 4 · COMMS ══ -->
+  <div class="chapter ch-comms">
+    <div class="chapter-accent-bar" style="background: linear-gradient(90deg, #3A4A7A, #5A6AB0);"></div>
+    <div class="chapter-num">04 · Communications</div>
+
+    <div class="chapter-topic">How is our team managing workload?</div>
+    <div class="big-number">389</div>
+    <div class="verdict">Intake volume is high but the team is clearing work — 88% resolved.</div>
+    <div class="context">389 intakes received YTD. The comms team has resolved 342. 47 remain open. 12 are overdue past the 14-day SLA threshold and need leadership attention.</div>
+
+    <div class="pipeline-flow">
+      <div class="flow-step">
+        <div class="flow-num" style="color:var(--muted);">389</div>
+        <div class="flow-right">
+          <div class="flow-name">Total Received</div>
+          <div class="flow-bar"><div class="flow-fill" style="width:100%; background:var(--paper-dark);"></div></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="color:#3A4A7A;">330</div>
+        <div class="flow-right">
+          <div class="flow-name">Assigned / In Progress</div>
+          <div class="flow-bar"><div class="flow-fill" style="width:85%; background:#3A4A7A; opacity:0.5;"></div></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="color:var(--green);">342</div>
+        <div class="flow-right">
+          <div class="flow-name">Resolved / Closed</div>
+          <div class="flow-bar"><div class="flow-fill" style="width:88%; background:var(--green); opacity:0.6;"></div></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="color:var(--gold);">47</div>
+        <div class="flow-right">
+          <div class="flow-name">Open</div>
+          <div class="flow-bar"><div class="flow-fill" style="width:12%; background:var(--gold);"></div></div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num" style="color:var(--accent);">12</div>
+        <div class="flow-right">
+          <div class="flow-name">Overdue (&gt;14 days)</div>
+          <div class="flow-bar"><div class="flow-fill" style="width:3%; background:var(--accent);"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CHAPTER 5 · TREND CHART ══ -->
+  <div class="chapter chapter-wide ch-chart">
+    <div class="chapter-accent-bar" style="background: linear-gradient(90deg, #2A6B4A, #1A6B6B);"></div>
+    <div class="chapter-num">05 · Trends</div>
+
+    <div class="chapter-topic">Are we improving over time?</div>
+    <div class="big-number" style="font-size:60px;">Q1 <span class="suffix">2026</span></div>
+    <div class="verdict">CAF spend and program delivery are both tracking ahead of the same period last year.</div>
+    <div class="context">Monthly CAF actuals loaded vs. same months in 2025. Programs delivered per quarter trending upward alongside agency growth.</div>
+
+    <!-- SVG Chart — CAF Actuals Monthly -->
+    <div style="margin-top:20px;">
+      <div class="mini-chart-label">Monthly CAF Receipts Loaded · 2026 vs 2025</div>
+      <svg width="100%" height="130" viewBox="0 0 400 130" preserveAspectRatio="none" style="overflow:visible;">
+        <!-- Grid lines -->
+        <line x1="0" y1="20" x2="400" y2="20" stroke="var(--rule)" stroke-width="1"/>
+        <line x1="0" y1="55" x2="400" y2="55" stroke="var(--rule)" stroke-width="1"/>
+        <line x1="0" y1="90" x2="400" y2="90" stroke="var(--rule)" stroke-width="1"/>
+        <text x="0" y="17" font-family="JetBrains Mono" font-size="8" fill="var(--muted)">$800K</text>
+        <text x="0" y="52" font-family="JetBrains Mono" font-size="8" fill="var(--muted)">$500K</text>
+        <text x="0" y="87" font-family="JetBrains Mono" font-size="8" fill="var(--muted)">$200K</text>
+
+        <!-- 2025 line (muted) -->
+        <polyline points="40,95 100,80 160,70 220,75 280,60 340,55 390,45"
+          fill="none" stroke="var(--rule-strong)" stroke-width="1.5" stroke-dasharray="4 3"/>
+
+        <!-- 2026 line -->
+        <polyline points="40,88 100,68 160,58 220,45"
+          fill="none" stroke="var(--teal)" stroke-width="2.5" stroke-linejoin="round"/>
+
+        <!-- Dots 2026 -->
+        <circle cx="40" cy="88" r="4" fill="var(--teal)"/>
+        <circle cx="100" cy="68" r="4" fill="var(--teal)"/>
+        <circle cx="160" cy="58" r="4" fill="var(--teal)"/>
+        <circle cx="220" cy="45" r="5" fill="var(--ink)" stroke="var(--teal)" stroke-width="2"/>
+
+        <!-- Month labels -->
+        <text x="40" y="120" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="var(--muted)">OCT</text>
+        <text x="100" y="120" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="var(--muted)">NOV</text>
+        <text x="160" y="120" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="var(--muted)">DEC</text>
+        <text x="220" y="120" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="var(--teal)">JAN</text>
+
+        <!-- Legend -->
+        <line x1="260" y1="115" x2="278" y2="115" stroke="var(--teal)" stroke-width="2.5"/>
+        <text x="282" y="118" font-family="JetBrains Mono" font-size="7" fill="var(--teal)">2026</text>
+        <line x1="310" y1="115" x2="328" y2="115" stroke="var(--rule-strong)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <text x="332" y="118" font-family="JetBrains Mono" font-size="7" fill="var(--muted)">2025</text>
+      </svg>
+    </div>
+
+    <hr class="rule">
+    <!-- Programs by category bars -->
+    <div class="mini-chart-label" style="margin-top:8px;">Programs Delivered by Category · Q1</div>
+    <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:var(--muted);">Health & Wellness</span><span style="font-family:'JetBrains Mono';font-size:11px;">37</span></div>
+        <div style="height:4px;background:var(--paper-dark);border-radius:2px;"><div style="height:100%;width:100%;background:var(--teal);border-radius:2px;opacity:0.7;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:var(--muted);">Social & Recreation</span><span style="font-family:'JetBrains Mono';font-size:11px;">30</span></div>
+        <div style="height:4px;background:var(--paper-dark);border-radius:2px;"><div style="height:100%;width:81%;background:var(--teal);border-radius:2px;opacity:0.7;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:var(--muted);">Learning & Education</span><span style="font-family:'JetBrains Mono';font-size:11px;">25</span></div>
+        <div style="height:4px;background:var(--paper-dark);border-radius:2px;"><div style="height:100%;width:68%;background:var(--gold);border-radius:2px;opacity:0.7;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:var(--muted);">Food & Nutrition</span><span style="font-family:'JetBrains Mono';font-size:11px;">20</span></div>
+        <div style="height:4px;background:var(--paper-dark);border-radius:2px;"><div style="height:100%;width:54%;background:var(--gold);border-radius:2px;opacity:0.7;"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:3px;"><span style="font-size:11px;color:var(--muted);">Support Services</span><span style="font-family:'JetBrains Mono';font-size:11px;">12</span></div>
+        <div style="height:4px;background:var(--paper-dark);border-radius:2px;"><div style="height:100%;width:32%;background:var(--accent);border-radius:2px;opacity:0.6;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CHAPTER 6 · CAF DECOMP TREE ══ -->
+  <div class="chapter chapter-xwide ch-decomp" style="overflow-y:auto;">
+    <div class="chapter-accent-bar" style="background: linear-gradient(90deg, #9A7B2F, #C4412A);"></div>
+    <div class="chapter-num">06 · CAF Decomposition</div>
+
+    <div class="chapter-topic">Where is the CAF budget going?</div>
+    <div class="decomp-title">CAF Spend · Drill Down by Region → Building → Category</div>
+    <div style="font-size:11px; color:var(--muted); margin-bottom:4px; line-height:1.5;">Click a region node to expand to building level. This mirrors Power BI's Decomposition Tree visual.</div>
+
+    <div class="decomp-tree">
+      <!-- ROOT -->
+      <div>
+        <div class="decomp-root">
+          <span class="decomp-root-val">$2.1M</span>
+          <span class="decomp-root-label">Total CAF Actuals YTD</span>
+        </div>
+      </div>
+
+      <!-- LEVEL 1 — Regions -->
+      <div class="decomp-level" id="level1">
+        <div class="decomp-node" onclick="toggleSub('north-york')">
+          <div class="decomp-node-val">$698K</div>
+          <div class="decomp-node-label">North York</div>
+          <div class="decomp-node-sub">63% utilized · 7 bldgs</div>
+        </div>
+        <div class="decomp-node flagged" onclick="toggleSub('etobicoke')">
+          <div class="decomp-node-val">$312K</div>
+          <div class="decomp-node-label">Etobicoke ⚑</div>
+          <div class="decomp-node-sub">40% utilized · 5 bldgs</div>
+        </div>
+        <div class="decomp-node" onclick="toggleSub('scarborough')">
+          <div class="decomp-node-val">$540K</div>
+          <div class="decomp-node-label">Scarborough</div>
+          <div class="decomp-node-sub">60% utilized · 6 bldgs</div>
+        </div>
+        <div class="decomp-node" onclick="toggleSub('downtown')">
+          <div class="decomp-node-val">$498K</div>
+          <div class="decomp-node-label">Downtown / E.York</div>
+          <div class="decomp-node-sub">59% utilized · 4 bldgs</div>
+        </div>
+      </div>
+      <div class="decomp-expand-hint">Click a region to drill into buildings</div>
+
+      <!-- LEVEL 2 — Buildings (per region, toggle) -->
+      <div class="decomp-sub-level" id="north-york">
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$154K</div>
+          <div class="decomp-sub-node-label">Dells Rd</div>
+        </div>
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$138K</div>
+          <div class="decomp-sub-node-label">Sheppard Ave</div>
+        </div>
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$112K</div>
+          <div class="decomp-sub-node-label">Jane St</div>
+        </div>
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$294K</div>
+          <div class="decomp-sub-node-label">4 Others</div>
+        </div>
+      </div>
+
+      <div class="decomp-sub-level" id="etobicoke">
+        <div class="decomp-sub-node" style="border-color:rgba(196,65,42,0.3);">
+          <div class="decomp-sub-node-val" style="color:var(--accent);">$78K</div>
+          <div class="decomp-sub-node-label">Kipling Twrs ⚑</div>
+        </div>
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$147K</div>
+          <div class="decomp-sub-node-label">Weston Rd</div>
+        </div>
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$87K</div>
+          <div class="decomp-sub-node-label">3 Others</div>
+        </div>
+      </div>
+
+      <div class="decomp-sub-level" id="scarborough">
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$108K</div>
+          <div class="decomp-sub-node-label">Talisker</div>
+        </div>
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$432K</div>
+          <div class="decomp-sub-node-label">5 Others</div>
+        </div>
+      </div>
+
+      <div class="decomp-sub-level" id="downtown">
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$114K</div>
+          <div class="decomp-sub-node-label">Bleecker</div>
+        </div>
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$94K</div>
+          <div class="decomp-sub-node-label">Alexandra Pk</div>
+        </div>
+        <div class="decomp-sub-node">
+          <div class="decomp-sub-node-val">$290K</div>
+          <div class="decomp-sub-node-label">2 Others</div>
+        </div>
+      </div>
+
+      <hr class="rule" style="margin-top:8px;">
+
+      <!-- LEVEL 3 — Category breakdown hint -->
+      <div class="mini-chart-label" style="margin-bottom:8px;">CAF Spend by Program Category · All Regions</div>
+      <div style="display:flex; flex-direction:column; gap:7px;">
+        <div class="stat-row"><span class="stat-label">Health & Wellness</span><span class="stat-val">$630K · 30%</span></div>
+        <div class="stat-row"><span class="stat-label">Social & Recreation</span><span class="stat-val">$504K · 24%</span></div>
+        <div class="stat-row"><span class="stat-label">Learning & Education</span><span class="stat-val">$420K · 20%</span></div>
+        <div class="stat-row"><span class="stat-label">Food & Nutrition</span><span class="stat-val">$336K · 16%</span></div>
+        <div class="stat-row"><span class="stat-label">Support Services</span><span class="stat-val">$210K · 10%</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SCROLL HINT -->
+<div class="scroll-hint" id="scroll-hint">Scroll to read <span class="scroll-hint-arrow">→</span></div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     CAF DETAIL PAGE OVERLAY
+═══════════════════════════════════════════════════════════════ -->
+<div id="caf-page" style="
+  display:none;
+  position:fixed; inset:0; z-index:200;
+  background:var(--paper);
+  overflow-y:auto;
+  animation: slideUp 0.35s cubic-bezier(0.22,1,0.36,1) both;
+">
+
+<style>
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(40px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+.caf-page-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 18px 40px 16px;
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper);
+  position: sticky; top:0; z-index:10;
+}
+
+.back-btn {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:11px; font-weight:600; letter-spacing:0.15em;
+  text-transform:uppercase; color:var(--ink);
+  background:none; border:1px solid var(--rule-strong);
+  padding:7px 16px; border-radius:3px; cursor:pointer;
+  transition: background 0.15s;
+}
+.back-btn:hover { background: var(--paper-dark); }
+
+.caf-page-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; font-weight:700; letter-spacing:0.02em;
+}
+
+.caf-page-body {
+  padding: 36px 40px 60px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+/* Summary strip */
+.caf-summary-strip {
+  display:grid; grid-template-columns: repeat(4,1fr); gap:16px;
+  margin-bottom:36px;
+}
+
+.caf-sum-card {
+  background: var(--paper-mid);
+  border: 1px solid var(--rule-strong);
+  border-radius:6px; padding:20px 20px 16px;
+  position:relative; overflow:hidden;
+}
+
+.caf-sum-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background: var(--card-accent, var(--gold));
+}
+
+.caf-sum-label {
+  font-size:9px; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; margin-bottom:8px;
+}
+
+.caf-sum-val {
+  font-family:'Cormorant Garamond',serif;
+  font-size:48px; font-weight:300; line-height:0.9;
+  letter-spacing:-0.02em;
+}
+
+.caf-sum-sub {
+  font-size:11px; color:var(--muted); margin-top:8px;
+}
+
+/* Two column layout */
+.caf-two-col {
+  display:grid; grid-template-columns:1.2fr 1fr; gap:24px;
+  margin-bottom:28px;
+}
+
+.caf-panel {
+  background:var(--paper-mid); border:1px solid var(--rule-strong);
+  border-radius:6px; padding:24px;
+}
+
+.caf-panel-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:17px; font-weight:700; margin-bottom:4px;
+}
+
+.caf-panel-sub {
+  font-size:11px; color:var(--muted); margin-bottom:20px;
+}
+
+/* Building table */
+.caf-table { width:100%; border-collapse:collapse; font-size:12px; }
+.caf-table thead th {
+  font-size:9px; letter-spacing:0.16em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; padding:0 12px 10px 0;
+  text-align:left; border-bottom:1px solid var(--rule-strong);
+}
+.caf-table tbody tr { border-bottom:1px solid var(--rule); transition:background 0.12s; }
+.caf-table tbody tr:hover { background:rgba(0,0,0,0.02); }
+.caf-table tbody tr:last-child { border-bottom:none; }
+.caf-table td { padding:9px 12px 9px 0; }
+.caf-table td:last-child { text-align:right; padding-right:0; }
+
+/* Pipeline bar in table */
+.tbl-pipe {
+  display:flex; align-items:center; gap:8px;
+}
+.tbl-pipe-track {
+  flex:1; height:4px; background:var(--paper-dark); border-radius:2px; min-width:50px;
+}
+.tbl-pipe-fill { height:100%; border-radius:2px; }
+
+/* Status badge */
+.tbl-badge {
+  display:inline-block; font-size:9px; font-weight:600;
+  letter-spacing:0.1em; text-transform:uppercase;
+  padding:2px 8px; border-radius:2px;
+}
+.tbl-badge-green { background:rgba(42,107,74,0.12); color:var(--green); }
+.tbl-badge-gold  { background:rgba(154,123,47,0.12); color:var(--gold); }
+.tbl-badge-red   { background:rgba(196,65,42,0.10); color:var(--accent); }
+
+/* Full-width panel */
+.caf-full-panel {
+  background:var(--paper-mid); border:1px solid var(--rule-strong);
+  border-radius:6px; padding:24px; margin-bottom:28px;
+}
+
+/* Decomp tree — full width */
+.full-decomp-level {
+  display:flex; gap:12px; flex-wrap:wrap;
+  padding-left:20px; position:relative; margin-bottom:16px;
+}
+.full-decomp-level::before {
+  content:''; position:absolute; left:0; top:0; bottom:16px;
+  width:1px; background:var(--rule-strong);
+}
+.full-decomp-node {
+  border:1px solid var(--rule-strong); border-radius:4px;
+  padding:12px 16px; background:var(--paper); cursor:pointer;
+  transition:all 0.15s; min-width:130px;
+  position:relative;
+}
+.full-decomp-node::before {
+  content:''; position:absolute;
+  left:-20px; top:50%; width:20px; height:1px;
+  background:var(--rule-strong);
+}
+.full-decomp-node:hover { border-color:var(--ink); background:var(--paper-dark); }
+.full-decomp-node.fd-flagged {
+  border-color:rgba(196,65,42,0.4);
+  background:rgba(196,65,42,0.04);
+}
+.fd-val {
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px; font-weight:700; line-height:1;
+}
+.fd-label { font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+.fd-sub { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-top:5px; }
+
+.fd-sub-level {
+  display:none; flex-wrap:wrap; gap:8px;
+  padding-left:20px; position:relative; margin-bottom:12px;
+}
+.fd-sub-level.open { display:flex; }
+.fd-sub-level::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:1px; background:var(--rule);
+}
+.fd-sub-node {
+  border:1px solid var(--rule); border-radius:3px;
+  padding:9px 12px; background:var(--paper-mid); min-width:100px;
+  position:relative;
+}
+.fd-sub-node::before {
+  content:''; position:absolute;
+  left:-20px; top:50%; width:20px; height:1px; background:var(--rule);
+}
+.fd-sub-val { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; line-height:1; }
+.fd-sub-label { font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+.fd-hint {
+  font-size:9px; color:var(--muted); letter-spacing:0.1em;
+  text-transform:uppercase; margin-bottom:10px; padding-left:20px;
+  display:flex; align-items:center; gap:6px;
+}
+.fd-hint::before { content:'↳'; font-size:11px; }
+</style>
+
+<!-- CAF PAGE HEADER -->
+<div class="caf-page-header">
+  <button class="back-btn" onclick="closeCAF()">← Back to Executive View</button>
+  <div class="caf-page-title">CAF Detail · 2026</div>
+  <div style="display:flex; gap:12px; align-items:center;">
+    <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted);">As of Feb 21, 2026 · Q1</span>
+    <span class="rag-pill rag-warn"><span class="rag-dot"></span>2 Buildings Flagged</span>
+  </div>
+</div>
+
+<div class="caf-page-body">
+
+  <!-- SUMMARY STRIP -->
+  <div class="caf-summary-strip">
+    <div class="caf-sum-card" style="--card-accent: var(--ink);">
+      <div class="caf-sum-label">Requests Received</div>
+      <div class="caf-sum-val">847</div>
+      <div class="caf-sum-sub">From tenants across all buildings · 2026</div>
+    </div>
+    <div class="caf-sum-card" style="--card-accent: var(--green);">
+      <div class="caf-sum-label">Manager Approved</div>
+      <div class="caf-sum-val" style="color:var(--green);">612</div>
+      <div class="caf-sum-sub">72% approval rate · 235 still pending</div>
+    </div>
+    <div class="caf-sum-card" style="--card-accent: var(--teal);">
+      <div class="caf-sum-label">Budget Allocated</div>
+      <div class="caf-sum-val"><span style="font-size:22px; vertical-align:super;">$</span>4.2<span style="font-size:22px; font-family:'Outfit',sans-serif; font-weight:300; color:var(--muted);">M</span></div>
+      <div class="caf-sum-sub">City of Toronto allocation · FY 2026</div>
+    </div>
+    <div class="caf-sum-card" style="--card-accent: var(--teal);">
+      <div class="caf-sum-label">Receipts Loaded (Spent)</div>
+      <div class="caf-sum-val" style="color:var(--teal);"><span style="font-size:22px; vertical-align:super;">$</span>2.1<span style="font-size:22px; font-family:'Outfit',sans-serif; font-weight:300; color:var(--muted);">M</span></div>
+      <div class="caf-sum-sub">51% of budget utilized YTD</div>
+    </div>
+  </div>
+
+  <!-- TWO COL: Building table + Approval funnel -->
+  <div class="caf-two-col">
+
+    <!-- BUILDING TABLE -->
+    <div class="caf-panel">
+      <div class="caf-panel-title">Requests & Spend by Building</div>
+      <div class="caf-panel-sub">Received → Approved → Spent vs. Budget · all buildings</div>
+      <table class="caf-table">
+        <thead>
+          <tr>
+            <th>Building</th>
+            <th>Region</th>
+            <th>Received</th>
+            <th>Approved</th>
+            <th>Spent vs Budget</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Dells Road</strong></td>
+            <td style="color:var(--muted);font-size:11px;">North York</td>
+            <td style="font-family:'JetBrains Mono',monospace;">82</td>
+            <td style="font-family:'JetBrains Mono',monospace; color:var(--green);">61 <span style="font-size:9px;color:var(--muted);">74%</span></td>
+            <td>
+              <div class="tbl-pipe">
+                <div class="tbl-pipe-track"><div class="tbl-pipe-fill" style="width:70%;background:var(--teal);"></div></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);">$154K / $220K</span>
+              </div>
+            </td>
+            <td><span class="tbl-badge tbl-badge-green">On Track</span></td>
+          </tr>
+          <tr>
+            <td><strong>Talisker</strong></td>
+            <td style="color:var(--muted);font-size:11px;">Scarborough</td>
+            <td style="font-family:'JetBrains Mono',monospace;">74</td>
+            <td style="font-family:'JetBrains Mono',monospace; color:var(--green);">55 <span style="font-size:9px;color:var(--muted);">74%</span></td>
+            <td>
+              <div class="tbl-pipe">
+                <div class="tbl-pipe-track"><div class="tbl-pipe-fill" style="width:60%;background:var(--teal);"></div></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);">$108K / $180K</span>
+              </div>
+            </td>
+            <td><span class="tbl-badge tbl-badge-green">On Track</span></td>
+          </tr>
+          <tr style="background:rgba(196,65,42,0.03);">
+            <td><strong>Kipling Towers</strong></td>
+            <td style="color:var(--muted);font-size:11px;">Etobicoke</td>
+            <td style="font-family:'JetBrains Mono',monospace;">91</td>
+            <td style="font-family:'JetBrains Mono',monospace; color:var(--accent);">52 <span style="font-size:9px;color:var(--muted);">57%</span></td>
+            <td>
+              <div class="tbl-pipe">
+                <div class="tbl-pipe-track"><div class="tbl-pipe-fill" style="width:30%;background:var(--accent);"></div></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);">$78K / $260K</span>
+              </div>
+            </td>
+            <td><span class="tbl-badge tbl-badge-red">⚑ Attention</span></td>
+          </tr>
+          <tr>
+            <td><strong>Bleecker</strong></td>
+            <td style="color:var(--muted);font-size:11px;">Downtown</td>
+            <td style="font-family:'JetBrains Mono',monospace;">68</td>
+            <td style="font-family:'JetBrains Mono',monospace; color:var(--green);">51 <span style="font-size:9px;color:var(--muted);">75%</span></td>
+            <td>
+              <div class="tbl-pipe">
+                <div class="tbl-pipe-track"><div class="tbl-pipe-fill" style="width:60%;background:var(--teal);"></div></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);">$114K / $190K</span>
+              </div>
+            </td>
+            <td><span class="tbl-badge tbl-badge-green">On Track</span></td>
+          </tr>
+          <tr>
+            <td><strong>Alexandra Park</strong></td>
+            <td style="color:var(--muted);font-size:11px;">Downtown</td>
+            <td style="font-family:'JetBrains Mono',monospace;">55</td>
+            <td style="font-family:'JetBrains Mono',monospace; color:var(--gold);">48 <span style="font-size:9px;color:var(--muted);">87%</span></td>
+            <td>
+              <div class="tbl-pipe">
+                <div class="tbl-pipe-track"><div class="tbl-pipe-fill" style="width:65%;background:var(--gold);"></div></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);">$94K / $145K</span>
+              </div>
+            </td>
+            <td><span class="tbl-badge tbl-badge-gold">Monitor</span></td>
+          </tr>
+          <tr>
+            <td><strong>Weston Road</strong></td>
+            <td style="color:var(--muted);font-size:11px;">Etobicoke</td>
+            <td style="font-family:'JetBrains Mono',monospace;">78</td>
+            <td style="font-family:'JetBrains Mono',monospace; color:var(--green);">58 <span style="font-size:9px;color:var(--muted);">74%</span></td>
+            <td>
+              <div class="tbl-pipe">
+                <div class="tbl-pipe-track"><div class="tbl-pipe-fill" style="width:70%;background:var(--teal);"></div></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);">$147K / $210K</span>
+              </div>
+            </td>
+            <td><span class="tbl-badge tbl-badge-green">On Track</span></td>
+          </tr>
+          <tr>
+            <td><strong>Sheppard Ave</strong></td>
+            <td style="color:var(--muted);font-size:11px;">North York</td>
+            <td style="font-family:'JetBrains Mono',monospace;">65</td>
+            <td style="font-family:'JetBrains Mono',monospace; color:var(--green);">50 <span style="font-size:9px;color:var(--muted);">77%</span></td>
+            <td>
+              <div class="tbl-pipe">
+                <div class="tbl-pipe-track"><div class="tbl-pipe-fill" style="width:63%;background:var(--teal);"></div></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);">$138K / $220K</span>
+              </div>
+            </td>
+            <td><span class="tbl-badge tbl-badge-green">On Track</span></td>
+          </tr>
+          <tr>
+            <td><strong>Jane Street</strong></td>
+            <td style="color:var(--muted);font-size:11px;">North York</td>
+            <td style="font-family:'JetBrains Mono',monospace;">58</td>
+            <td style="font-family:'JetBrains Mono',monospace; color:var(--green);">44 <span style="font-size:9px;color:var(--muted);">76%</span></td>
+            <td>
+              <div class="tbl-pipe">
+                <div class="tbl-pipe-track"><div class="tbl-pipe-fill" style="width:52%;background:var(--teal);"></div></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--teal);">$112K / $215K</span>
+              </div>
+            </td>
+            <td><span class="tbl-badge tbl-badge-green">On Track</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- RIGHT COL: Funnel + Pending breakdown -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+
+      <!-- Request Funnel -->
+      <div class="caf-panel">
+        <div class="caf-panel-title">Request Funnel · 2026</div>
+        <div class="caf-panel-sub">From tenant submission to fulfilled order</div>
+
+        <div style="display:flex; flex-direction:column; gap:2px;">
+          <!-- Submitted bar -->
+          <div style="padding:12px 14px; background:var(--paper-dark); border-radius:4px 4px 0 0;">
+            <div style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">① Submitted by Tenants</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;">847</span>
+              <span style="font-size:11px;color:var(--muted);">100%</span>
+            </div>
+            <div style="height:4px;background:rgba(0,0,0,0.08);border-radius:2px;margin-top:6px;"><div style="height:100%;width:100%;background:var(--ink);opacity:0.3;border-radius:2px;"></div></div>
+          </div>
+          <div style="height:6px; background:linear-gradient(var(--paper-dark),var(--paper-mid)); display:flex; align-items:center; justify-content:center;">
+            <div style="width:60%;height:1px;background:var(--rule-strong);"></div>
+          </div>
+          <!-- Approved -->
+          <div style="padding:12px 14px; background:var(--paper-mid);">
+            <div style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">② Approved by Manager</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--green);">612</span>
+              <span style="font-size:11px;color:var(--green);font-weight:600;">72%</span>
+            </div>
+            <div style="height:4px;background:rgba(0,0,0,0.08);border-radius:2px;margin-top:6px;"><div style="height:100%;width:72%;background:var(--green);border-radius:2px;opacity:0.7;"></div></div>
+          </div>
+          <div style="height:6px; background:linear-gradient(var(--paper-mid),var(--paper)); display:flex; align-items:center; justify-content:center;">
+            <div style="width:72%;height:1px;background:var(--rule-strong);"></div>
+          </div>
+          <!-- Ordered / Spent -->
+          <div style="padding:12px 14px; background:var(--paper); border:1px solid var(--rule-strong); border-radius:0 0 4px 4px;">
+            <div style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">③ Ordered by Clerk · Receipts Loaded</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;">
+              <span style="font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--teal);"><span style="font-size:16px;vertical-align:super;">$</span>2.1M</span>
+              <span style="font-size:11px;color:var(--teal);font-weight:600;">51% of $4.2M</span>
+            </div>
+            <div style="height:4px;background:rgba(0,0,0,0.08);border-radius:2px;margin-top:6px;"><div style="height:100%;width:51%;background:var(--teal);border-radius:2px;opacity:0.7;"></div></div>
+          </div>
+        </div>
+
+        <!-- Pending note -->
+        <div style="margin-top:14px; padding:10px 12px; background:rgba(154,123,47,0.08); border-left:2px solid var(--gold); border-radius:0 3px 3px 0;">
+          <div style="font-size:11px; color:var(--gold); font-weight:600; margin-bottom:3px;">235 requests awaiting manager approval</div>
+          <div style="font-size:10px; color:var(--muted);">Highest pending volumes: Kipling Towers (39), Scarborough East (28)</div>
+        </div>
+      </div>
+
+      <!-- Budget by Region -->
+      <div class="caf-panel">
+        <div class="caf-panel-title">Budget Utilization by Region</div>
+        <div class="caf-panel-sub">Actuals loaded vs. allocated · YTD</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;font-weight:500;">North York</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);">$698K / $1.1M · 63%</span>
+            </div>
+            <div style="height:5px;background:var(--paper-dark);border-radius:3px;"><div style="height:100%;width:63%;background:var(--green);opacity:0.7;border-radius:3px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;font-weight:500;">Scarborough</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);">$540K / $900K · 60%</span>
+            </div>
+            <div style="height:5px;background:var(--paper-dark);border-radius:3px;"><div style="height:100%;width:60%;background:var(--green);opacity:0.7;border-radius:3px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;font-weight:500;">Downtown / E.York</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);">$498K / $840K · 59%</span>
+            </div>
+            <div style="height:5px;background:var(--paper-dark);border-radius:3px;"><div style="height:100%;width:59%;background:var(--gold);opacity:0.7;border-radius:3px;"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:12px;font-weight:500;">Etobicoke</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">$312K / $780K · 40% ⚑</span>
+            </div>
+            <div style="height:5px;background:var(--paper-dark);border-radius:3px;"><div style="height:100%;width:40%;background:var(--accent);opacity:0.7;border-radius:3px;"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DECOMP TREE — FULL WIDTH -->
+  <div class="caf-full-panel">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;">
+      <div class="caf-panel-title">CAF Decomposition Tree</div>
+      <a href="caf_decomp_tree.html" target="_blank" style="font-size:10px;color:#0078d4;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;text-decoration:none;background:rgba(0,120,212,0.08);border:1px solid rgba(0,120,212,0.25);padding:5px 12px;border-radius:3px;">Open Full Tree ↗</a>
+    </div>
+    <div class="caf-panel-sub">Total actuals → by Region → by Building → by Program Category</div>
+
+    <!-- Root -->
+    <div style="margin-bottom:16px;">
+      <div style="display:inline-block; background:var(--ink); color:var(--paper); padding:12px 20px; border-radius:4px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;line-height:1;color:var(--paper);">$2.1M</div>
+        <div style="font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(245,241,235,0.6);margin-top:3px;">Total CAF Actuals YTD · 2026</div>
+      </div>
+    </div>
+
+    <!-- L1 Regions -->
+    <div class="full-decomp-level">
+      <div class="full-decomp-node" onclick="fdToggle('fd-ny')">
+        <div class="fd-val">$698K</div>
+        <div class="fd-label">North York</div>
+        <div class="fd-sub">63% util · 7 bldgs · 215 req</div>
+      </div>
+      <div class="full-decomp-node" onclick="fdToggle('fd-sc')">
+        <div class="fd-val">$540K</div>
+        <div class="fd-label">Scarborough</div>
+        <div class="fd-sub">60% util · 6 bldgs · 198 req</div>
+      </div>
+      <div class="full-decomp-node" onclick="fdToggle('fd-dt')">
+        <div class="fd-val">$498K</div>
+        <div class="fd-label">Downtown / E.York</div>
+        <div class="fd-sub">59% util · 4 bldgs · 163 req</div>
+      </div>
+      <div class="full-decomp-node fd-flagged" onclick="fdToggle('fd-et')">
+        <div class="fd-val" style="color:var(--accent);">$312K</div>
+        <div class="fd-label">Etobicoke ⚑</div>
+        <div class="fd-sub">40% util · 5 bldgs · 271 req</div>
+      </div>
+    </div>
+    <div class="fd-hint">Click a region to drill into buildings</div>
+
+    <!-- L2 Buildings -->
+    <div class="fd-sub-level" id="fd-ny">
+      <div class="fd-sub-node"><div class="fd-sub-val">$154K</div><div class="fd-sub-label">Dells Road</div></div>
+      <div class="fd-sub-node"><div class="fd-sub-val">$138K</div><div class="fd-sub-label">Sheppard Ave</div></div>
+      <div class="fd-sub-node"><div class="fd-sub-val">$112K</div><div class="fd-sub-label">Jane Street</div></div>
+      <div class="fd-sub-node"><div class="fd-sub-val">$294K</div><div class="fd-sub-label">4 Others</div></div>
+    </div>
+    <div class="fd-sub-level" id="fd-sc">
+      <div class="fd-sub-node"><div class="fd-sub-val">$108K</div><div class="fd-sub-label">Talisker</div></div>
+      <div class="fd-sub-node"><div class="fd-sub-val">$432K</div><div class="fd-sub-label">5 Others</div></div>
+    </div>
+    <div class="fd-sub-level" id="fd-dt">
+      <div class="fd-sub-node"><div class="fd-sub-val">$114K</div><div class="fd-sub-label">Bleecker</div></div>
+      <div class="fd-sub-node"><div class="fd-sub-val">$94K</div><div class="fd-sub-label">Alexandra Park</div></div>
+      <div class="fd-sub-node"><div class="fd-sub-val">$290K</div><div class="fd-sub-label">2 Others</div></div>
+    </div>
+    <div class="fd-sub-level" id="fd-et">
+      <div class="fd-sub-node" style="border-color:rgba(196,65,42,0.35);"><div class="fd-sub-val" style="color:var(--accent);">$78K</div><div class="fd-sub-label">Kipling Twrs ⚑</div></div>
+      <div class="fd-sub-node"><div class="fd-sub-val">$147K</div><div class="fd-sub-label">Weston Road</div></div>
+      <div class="fd-sub-node"><div class="fd-sub-val">$87K</div><div class="fd-sub-label">3 Others</div></div>
+    </div>
+
+    <!-- L3 Category split -->
+    <hr style="border:none;border-top:1px solid var(--rule);margin:8px 0 16px;">
+    <div style="font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">CAF Spend by Program Category · All Buildings</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">
+      <div style="text-align:center;padding:14px 10px;background:var(--paper);border:1px solid var(--rule-strong);border-radius:4px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;">$630K</div>
+        <div style="font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:4px;">Health &<br>Wellness</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);margin-top:6px;">30%</div>
+      </div>
+      <div style="text-align:center;padding:14px 10px;background:var(--paper);border:1px solid var(--rule-strong);border-radius:4px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;">$504K</div>
+        <div style="font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:4px;">Social &<br>Recreation</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal);margin-top:6px;">24%</div>
+      </div>
+      <div style="text-align:center;padding:14px 10px;background:var(--paper);border:1px solid var(--rule-strong);border-radius:4px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;">$420K</div>
+        <div style="font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:4px;">Learning &<br>Education</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);margin-top:6px;">20%</div>
+      </div>
+      <div style="text-align:center;padding:14px 10px;background:var(--paper);border:1px solid var(--rule-strong);border-radius:4px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;">$336K</div>
+        <div style="font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:4px;">Food &<br>Nutrition</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);margin-top:6px;">16%</div>
+      </div>
+      <div style="text-align:center;padding:14px 10px;background:var(--paper);border:1px solid var(--rule-strong);border-radius:4px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;">$210K</div>
+        <div style="font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:4px;">Support<br>Services</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);margin-top:6px;">10%</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /caf-page-body -->
+</div><!-- /caf-page -->
+
+<script>
+// ── Decomp tree toggles (main page)
+function toggleSub(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ── CAF detail page decomp toggles
+function fdToggle(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+// ── Open / close CAF page
+function openCAF() {
+  const page = document.getElementById('caf-page');
+  page.style.display = 'block';
+  page.style.animation = 'none';
+  page.offsetHeight; // reflow
+  page.style.animation = 'slideUp 0.35s cubic-bezier(0.22,1,0.36,1) both';
+  document.getElementById('scroll-hint').style.display = 'none';
+}
+
+function closeCAF() {
+  const page = document.getElementById('caf-page');
+  page.style.animation = 'slideDown 0.25s ease both';
+  setTimeout(() => {
+    page.style.display = 'none';
+    document.getElementById('scroll-hint').style.display = 'flex';
+  }, 240);
+}
+
+// Slide down animation for close
+const styleEl = document.createElement('style');
+styleEl.textContent = `@keyframes slideDown {
+  from { opacity:1; transform:translateY(0); }
+  to   { opacity:0; transform:translateY(30px); }
+}`;
+document.head.appendChild(styleEl);
+
+// ── Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  const caf = document.getElementById('caf-page');
+  if (caf.style.display === 'block') {
+    if (e.key === 'Escape') closeCAF();
+    return;
+  }
+  const s = document.getElementById('scroll');
+  if (e.key === 'ArrowRight') s.scrollBy({ left: 320, behavior: 'smooth' });
+  if (e.key === 'ArrowLeft')  s.scrollBy({ left: -320, behavior: 'smooth' });
+});
+</script>
+</body>
+</html>
